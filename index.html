@@ -16,7 +16,14 @@
     </div>
 
     <div class="container">
+        
         <div id="view-login" class="box">
+            <div class="logo-container">
+                <div class="logo-circle">
+                    <img src="img/LogoLueve.jpg" alt="Logo Llueve Café">
+                </div>
+            </div>
+
             <h2 id="title-action">BIENVENIDO</h2>
             <p id="desc-action" style="color:gray; font-size:14px; margin-bottom:15px;">Ingresa tu teléfono para ver tu saldo</p>
             
@@ -26,35 +33,55 @@
                 <input type="text" id="inp-name" placeholder="Tu Nombre Completo">
             </div>
 
-            <button id="btn-main" onclick="procesarAcceso()">ENTRAR</button>
+            <button id="btn-main" class="btn-search" onclick="procesarAcceso()">ENTRAR</button>
             <button id="btn-switch" class="btn-link" onclick="modoRegistro()">No tengo cuenta, registrarme</button>
         </div>
 
-        <div id="view-card" class="box card-active hidden">
-            <h2 id="txt-user">¡HOLA!</h2>
-            <p style="margin-bottom: 5px; font-size: 14px; color: gray;">Saldo disponible:</p>
+        <div id="view-card" class="hidden" style="width: 100%;">
             
-            <div class="points-container">
-                <div class="points" id="txt-pts">$0.00</div>
-                <button class="btn-refresh" onclick="recargarSaldo()">🔄</button>
+            <div class="view-card-bank">
+                <div style="display: flex; justify-content: space-between; align-items: flex-start;">
+                    <div style="display: flex; align-items: center; gap: 8px;">
+                        <div class="card-chip"></div>
+                        <span style="font-size: 20px; color: rgba(255,255,255,0.2); transform: rotate(90deg); display: inline-block;">(((</span>
+                    </div>
+                    <img src="img/LogoLueve.jpg" alt="Logo" style="width: 45px; height: 45px; border-radius: 50%; border: 1px solid var(--primary);">
+                </div>
+
+                <div>
+                    <div class="card-label">Saldo Disponible</div>
+                    <div class="card-number" id="txt-pts">$0.00</div>
+                </div>
+
+                <div style="display: flex; justify-content: space-between; align-items: flex-end;">
+                    <div>
+                        <div class="card-label">Titular</div>
+                        <div class="card-holder" id="txt-user-name">CLIENTE</div>
+                    </div>
+                    <button class="btn-refresh" onclick="recargarSaldo()" title="Actualizar Saldo">
+                        &#8635;
+                    </button>
+                </div>
             </div>
-            
-            <div class="qr-box">
-                <img id="img-qr" src="" alt="QR" style="width:100%">
+
+            <div class="box" style="margin-top: -10px; padding-top: 40px;">
+                <div class="qr-box">
+                    <img id="img-qr" src="" alt="QR" style="width:100%">
+                </div>
+                <p style="font-size: 12px; color: gray; margin-top: 15px;">Muestra este código en caja para acumular cashback o pagar.</p>
+                <button class="btn-link" onclick="location.reload()">Cerrar sesión</button>
             </div>
-            
-            <p style="font-size: 12px; color: gray;">Muestra este código en caja para acumular cashback o pagar.</p>
-            <button class="btn-link" onclick="location.reload()">Cerrar sesión</button>
         </div>
     </div>
 
     <script>
-        const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbzVjcGk0-oeMGXuqlCeQPLGsKHDF6ruEWWGRs_uhkWjk17-qY7Ekdq9ucWAL_ZxL3Y5Cg/exec"; // <--- PEGA TU LINK /exec AQUÍ
+        const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbyzKXsuEBRtdaqXz9rDWyxeZfzaV8L0uHDBbb0VH4C3Jyws0hcI7eVn-zcwFOwg3zrYLg/exec"; 
         let esRegistro = false;
 
         // --- SISTEMA DE NOTIFICACIONES ---
         function mostrarNotificacion(mensaje, tipo = 'success') {
             const container = document.getElementById('notification-container');
+            if(!container) return;
             const toast = document.createElement('div');
             toast.className = `toast ${tipo}`;
             toast.innerHTML = `<span>${mensaje}</span>`;
@@ -113,12 +140,19 @@
 
         async function recargarSaldo() {
             const tel = document.getElementById('inp-tel').value;
+            if(!tel) return;
+            
             mostrarCargando("ACTUALIZANDO...");
             try {
                 const url = `${WEB_APP_URL}?telefono=${tel}`;
                 const response = await fetch(url);
                 const res = await response.json();
-                document.getElementById('txt-pts').innerText = "$" + parseFloat(res.puntos).toFixed(2);
+                
+                // Actualizar saldo en la tarjeta
+                const ptsElement = document.getElementById('txt-pts');
+                if(ptsElement) {
+                    ptsElement.innerText = "$" + parseFloat(res.puntos).toFixed(2);
+                }
                 mostrarNotificacion("Saldo actualizado correctamente");
             } catch (e) {
                 mostrarNotificacion("Error al actualizar saldo", "error");
@@ -130,8 +164,16 @@
         function mostrarTarjeta(nombre, puntos, tel) {
             document.getElementById('view-login').classList.add('hidden');
             document.getElementById('view-card').classList.remove('hidden');
-            document.getElementById('txt-user').innerText = "¡HOLA, " + nombre.toUpperCase() + "!";
-            document.getElementById('txt-pts').innerText = "$" + parseFloat(puntos).toFixed(2);
+            
+            // Actualizar Nombre en la tarjeta bancaria
+            const nameElement = document.getElementById('txt-user-name');
+            if(nameElement) nameElement.innerText = nombre.toUpperCase();
+            
+            // Actualizar Saldo
+            const ptsElement = document.getElementById('txt-pts');
+            if(ptsElement) ptsElement.innerText = "$" + parseFloat(puntos).toFixed(2);
+            
+            // Generar QR
             document.getElementById('img-qr').src = `https://api.qrserver.com/v1/create-qr-code/?size=160x160&data=${tel}`;
         }
     </script>
