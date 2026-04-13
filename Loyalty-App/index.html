@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Silva Loyalty - Mi Tarjeta</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <div id="notification-container"></div>
+
+    <div id="overlay-carga">
+        <div class="spinner"></div>
+        <div class="loading-text" id="texto-carga">CONECTANDO...</div>
+    </div>
+
+    <div class="container">
+        <div id="view-login" class="box">
+            <h2 id="title-action">BIENVENIDO</h2>
+            <p id="desc-action" style="color:gray; font-size:14px; margin-bottom:15px;">Ingresa tu teléfono para ver tu saldo</p>
+            
+            <input type="number" id="inp-tel" placeholder="Número de teléfono">
+            
+            <div id="sec-name" class="hidden">
+                <input type="text" id="inp-name" placeholder="Tu Nombre Completo">
+            </div>
+
+            <button id="btn-main" onclick="procesarAcceso()">ENTRAR</button>
+            <button id="btn-switch" class="btn-link" onclick="modoRegistro()">No tengo cuenta, registrarme</button>
+        </div>
+
+        <div id="view-card" class="box card-active hidden">
+            <h2 id="txt-user">¡HOLA!</h2>
+            <p style="margin-bottom: 5px; font-size: 14px; color: gray;">Saldo disponible:</p>
+            
+            <div class="points-container">
+                <div class="points" id="txt-pts">$0.00</div>
+                <button class="btn-refresh" onclick="recargarSaldo()">🔄</button>
+            </div>
+            
+            <div class="qr-box">
+                <img id="img-qr" src="" alt="QR" style="width:100%">
+            </div>
+            
+            <p style="font-size: 12px; color: gray;">Muestra este código en caja para acumular cashback o pagar.</p>
+            <button class="btn-link" onclick="location.reload()">Cerrar sesión</button>
+        </div>
+    </div>
+
+    <script>
+        const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbzVjcGk0-oeMGXuqlCeQPLGsKHDF6ruEWWGRs_uhkWjk17-qY7Ekdq9ucWAL_ZxL3Y5Cg/exec"; // <--- PEGA TU LINK /exec AQUÍ
+        let esRegistro = false;
+
+        // --- SISTEMA DE NOTIFICACIONES ---
+        function mostrarNotificacion(mensaje, tipo = 'success') {
+            const container = document.getElementById('notification-container');
+            const toast = document.createElement('div');
+            toast.className = `toast ${tipo}`;
+            toast.innerHTML = `<span>${mensaje}</span>`;
+            
+            container.appendChild(toast);
+
+            setTimeout(() => {
+                toast.style.animation = "fadeOut 0.4s ease forwards";
+                setTimeout(() => toast.remove(), 400);
+            }, 3000);
+        }
+
+        function mostrarCargando(msj) {
+            document.getElementById('texto-carga').innerText = msj;
+            document.getElementById('overlay-carga').style.display = 'flex';
+        }
+
+        function ocultarCargando() {
+            document.getElementById('overlay-carga').style.display = 'none';
+        }
+
+        function modoRegistro() {
+            esRegistro = true;
+            document.getElementById('title-action').innerText = "REGISTRO";
+            document.getElementById('sec-name').classList.remove('hidden');
+            document.getElementById('btn-main').innerText = "REGISTRARME";
+            document.getElementById('btn-switch').classList.add('hidden');
+        }
+
+        async function procesarAcceso() {
+            const tel = document.getElementById('inp-tel').value;
+            const nom = document.getElementById('inp-name').value;
+
+            if (!tel) return mostrarNotificacion("Ingresa tu teléfono", "error");
+            if (esRegistro && !nom) return mostrarNotificacion("Ingresa tu nombre", "error");
+
+            mostrarCargando(esRegistro ? "CREANDO CUENTA..." : "CONSULTANDO...");
+
+            try {
+                const url = `${WEB_APP_URL}?telefono=${tel}&nombre=${encodeURIComponent(nom)}`;
+                const response = await fetch(url);
+                const res = await response.json();
+
+                if (res.status === "no_encontrado") {
+                    mostrarNotificacion("Número no registrado", "error");
+                } else {
+                    mostrarTarjeta(res.nombre, res.puntos, tel);
+                    mostrarNotificacion(`¡Bienvenido, ${res.nombre}!`);
+                }
+            } catch (err) {
+                mostrarNotificacion("Error de conexión", "error");
+            } finally {
+                ocultarCargando();
+            }
+        }
+
+        async function recargarSaldo() {
+            const tel = document.getElementById('inp-tel').value;
+            mostrarCargando("ACTUALIZANDO...");
+            try {
+                const url = `${WEB_APP_URL}?telefono=${tel}`;
+                const response = await fetch(url);
+                const res = await response.json();
+                document.getElementById('txt-pts').innerText = "$" + parseFloat(res.puntos).toFixed(2);
+                mostrarNotificacion("Saldo actualizado correctamente");
+            } catch (e) {
+                mostrarNotificacion("Error al actualizar saldo", "error");
+            } finally {
+                setTimeout(ocultarCargando, 500);
+            }
+        }
+
+        function mostrarTarjeta(nombre, puntos, tel) {
+            document.getElementById('view-login').classList.add('hidden');
+            document.getElementById('view-card').classList.remove('hidden');
+            document.getElementById('txt-user').innerText = "¡HOLA, " + nombre.toUpperCase() + "!";
+            document.getElementById('txt-pts').innerText = "$" + parseFloat(puntos).toFixed(2);
+            document.getElementById('img-qr').src = `https://api.qrserver.com/v1/create-qr-code/?size=160x160&data=${tel}`;
+        }
+    </script>
+</body>
+</html>
