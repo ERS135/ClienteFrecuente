@@ -38,42 +38,44 @@
         </div>
 
         <div id="view-card" class="hidden" style="width: 100%;">
-            
-            <div class="view-card-bank">
-                <div style="display: flex; justify-content: space-between; align-items: flex-start;">
-                    <div style="display: flex; align-items: center; gap: 8px;">
-                        <div class="card-chip"></div>
-                        <span style="font-size: 20px; color: rgba(255,255,255,0.2); transform: rotate(90deg); display: inline-block;">(((</span>
-                    </div>
-                    <img src="img/LogoLueve.jpg" alt="Logo" style="width: 45px; height: 45px; border-radius: 50%; border: 1px solid var(--primary);">
-                </div>
-
-                <div>
-                    <div class="card-label">Saldo Disponible</div>
-                    <div class="card-number" id="txt-pts">$0.00</div>
-                </div>
-
-                <div style="display: flex; justify-content: space-between; align-items: flex-end;">
-                    <div>
-                        <div class="card-label">Titular</div>
-                        <div class="card-holder" id="txt-user-name">CLIENTE</div>
-                    </div>
-                    <button class="btn-refresh" onclick="recargarSaldo()" title="Actualizar Saldo">
-                        &#8635;
-                    </button>
-                </div>
+    
+    <div class="view-card-bank">
+        <div style="display: flex; justify-content: space-between; align-items: flex-start;">
+            <div style="display: flex; align-items: center; gap: 10px;">
+                <div class="card-chip"></div>
+                <span style="font-size: 20px; color: rgba(212, 175, 55, 0.3); transform: rotate(90deg); display: inline-block; font-family: sans-serif; font-weight: bold;">(((</span>
             </div>
+            <img src="img/LogoLueve.jpg" alt="Logo" style="width: 55px; height: 55px; border-radius: 50%; border: 2px solid white; background: white; object-fit: contain;">
+        </div>
 
-            <div class="box" style="margin-top: -10px; padding-top: 40px;">
-                <div class="qr-box">
-                    <img id="img-qr" src="" alt="QR" style="width:100%">
-                </div>
-                <p style="font-size: 12px; color: gray; margin-top: 15px;">Muestra este código en caja para acumular cashback o pagar.</p>
-                <button class="btn-link" onclick="location.reload()">Cerrar sesión</button>
+        <div style="margin-top: 5px;">
+            <div class="card-label">Saldo Disponible</div>
+            <div class="card-number" id="txt-pts">$0.00</div>
+        </div>
+
+        <div style="display: flex; justify-content: space-between; align-items: flex-end;">
+            <div style="margin-bottom: 5px;">
+                <div class="card-label">Titular</div>
+                <div class="card-holder" id="txt-user-name">CLIENTE</div>
             </div>
+            <button class="btn-refresh" onclick="recargarSaldo()" title="Actualizar Saldo">
+                <span style="font-size: 22px; line-height: 1;">&#8635;</span>
+            </button>
         </div>
     </div>
 
+    <div class="box" style="margin-top: -10px; padding-top: 40px; border-radius: 0 0 20px 20px;">
+        <div class="qr-box">
+            <img id="img-qr" src="" alt="QR" style="width:100%">
+        </div>
+        <p style="font-size: 13px; color: #888; margin-top: 15px; padding: 0 10px; font-family: 'Segoe UI', sans-serif;">
+            Muestra este código en caja para acumular cashback o pagar.
+        </p>
+        <button class="btn-link" onclick="location.reload()" style="color: var(--primary); margin-top: 10px; font-weight: bold; background: none; border: none; cursor: pointer;">
+            Cerrar sesión
+        </button>
+    </div>
+</div>
     <script>
         const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbyzKXsuEBRtdaqXz9rDWyxeZfzaV8L0uHDBbb0VH4C3Jyws0hcI7eVn-zcwFOwg3zrYLg/exec"; 
         let esRegistro = false;

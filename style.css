@@ -88,33 +88,95 @@ button:hover {
 .view-card-bank {
     width: 100%;
     height: 200px;
-    background: linear-gradient(135deg, #1a1a1a 0%, #2a2a2a 100%);
+    background: radial-gradient(circle at 50% 50%, #2c2c2c 0%, #1a1a1a 100%);
     border-radius: 18px;
     position: relative;
     padding: 25px;
-    box-shadow: 0 10px 25px rgba(0,0,0,0.5);
-    border: 1px solid rgba(255,255,255,0.05);
+    box-shadow: 0 15px 35px rgba(0,0,0,0.8);
+    border: 1px solid rgba(255,255,255,0.08);
     display: flex;
     flex-direction: column;
     justify-content: space-between;
     text-align: left;
     box-sizing: border-box;
-    overflow: hidden;
-    /* MARGEN EXTRA DE SEGURIDAD */
+    overflow: hidden; 
     margin-bottom: 5px; 
 }
 
-/* Chip Realista */
+/* EL REFLEJO SATINADO EN POSICIÓN EXACTA */
+.view-card-bank::after {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -10%; /* Posición según tu imagen de referencia */
+    width: 60%;
+    height: 200%;
+    background: linear-gradient(
+        to right, 
+        transparent 0%, 
+        rgba(255, 255, 255, 0.01) 20%, 
+        rgba(255, 255, 255, 0.08) 50%, 
+        rgba(255, 255, 255, 0.01) 80%, 
+        transparent 100%
+    );
+    transform: rotate(35deg); 
+    pointer-events: none;
+    z-index: 1;
+}
+
+/* --- ELEMENTOS CON PROFUNDIDAD (Para que el reflejo pase detrás) --- */
+/* --- TIPOGRAFÍA Y TEXTOS IGUALES A LA IMAGEN --- */
+
+.card-number {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; /* Tipografía moderna para el saldo */
+    font-size: 2.4rem; /* Tamaño prominente como en la foto */
+    color: #625f51; /* Dorado brillante */
+    letter-spacing: 1px;
+    font-weight: 700; /* Negrita marcada */
+    margin: 2px 0;
+    position: relative;
+    z-index: 2;
+    text-shadow: 0 2px 10px rgba(0,0,0,0.6);
+}
+
+.card-label { 
+    font-family: 'Segoe UI', sans-serif;
+    font-size: 11px; 
+    color: #999; 
+    text-transform: uppercase; 
+    letter-spacing: 1.5px;
+    font-weight: 600;
+    position: relative;
+    z-index: 2;
+}
+
+.card-holder { 
+    font-family: 'Courier New', Courier, monospace; /* Tipografía estilo tarjeta bancaria para el nombre */
+    font-size: 16px; 
+    font-weight: 900; 
+    color: white; 
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    position: relative;
+    z-index: 2;
+    text-shadow: 0 1px 3px rgba(0,0,0,0.8);
+}
+
+/* Chip Realista con Sombra Profunda */
 .card-chip {
     width: 48px;
     height: 36px;
     background: linear-gradient(135deg, #f1c40f 0%, #d4af37 50%, #b8860b 100%);
     border-radius: 6px;
     position: relative;
-    box-shadow: inset 0 1px 2px rgba(255,255,255,0.3);
+    z-index: 2; /* Para que esté sobre el reflejo */
+    box-shadow: 
+        inset 0 1px 2px rgba(255,255,255,0.3),
+        0 4px 8px rgba(0,0,0,0.4);
     border: 1px solid #c99e2e;
 }
 
+/* Pseudo-elemento del chip para las líneas de circuito */
 .card-chip::before {
     content: '';
     position: absolute;
@@ -124,33 +186,52 @@ button:hover {
         linear-gradient(to bottom, transparent 48%, rgba(0,0,0,0.2) 50%, transparent 52%);
 }
 
+/* Estilo de Saldo igual a la imagen */
 .card-number {
-    font-family: 'Courier New', monospace;
-    font-size: 1.8rem;
-    color: var(--primary);
-    letter-spacing: 2px;
-    font-weight: bold;
-    margin: 5px 0;
+    font-family: 'Segoe UI', sans-serif; /* Más moderno que Courier */
+    font-size: 2.2rem;
+    color: #f1c40f; /* Dorado más vivo */
+    letter-spacing: 1px;
+    font-weight: 700;
+    margin: 2px 0;
+    position: relative;
+    z-index: 2; /* Para que esté sobre el reflejo */
+    text-shadow: 0 2px 10px rgba(0,0,0,0.5);
 }
 
-.card-label { font-size: 10px; color: #888; text-transform: uppercase; }
-.card-holder { font-size: 14px; font-weight: bold; color: white; text-transform: uppercase; }
+.card-label { 
+    font-size: 10px; 
+    color: #999; 
+    text-transform: uppercase; 
+    position: relative;
+    z-index: 2;
+}
 
-/* 4. BOTÓN ACTUALIZAR INTEGRADO */
+.card-holder { 
+    font-size: 15px; 
+    font-weight: bold; 
+    color: white; 
+    text-transform: uppercase;
+    position: relative;
+    z-index: 2;
+}
+
+/* --- BOTÓN ACTUALIZAR INTEGRADO (Dorado Circular) --- */
 .btn-refresh {
-    background: rgba(212, 175, 55, 0.1);
+    background: transparent;
     border: 1px solid var(--primary);
     color: var(--primary);
-    width: 35px;
-    height: 35px;
+    width: 38px;
+    height: 38px;
     border-radius: 50%;
     display: flex;
     justify-content: center;
     align-items: center;
     cursor: pointer;
     transition: 0.3s;
-    font-size: 18px;
-    padding: 0;
+    font-size: 20px;
+    position: relative;
+    z-index: 2; /* Para que esté sobre el reflejo */
 }
 
 .btn-refresh:hover {
