@@ -42,11 +42,15 @@ body {
 
 /* 2. CAJAS Y FORMULARIOS */
 .box {
-    background: var(--card);
+    /* --- INICIO EFECTO GLASSMORPHISM --- */
+    background: rgba(255, 255, 255, 0.05); /* Transparencia */
+    backdrop-filter: blur(15px);           /* Desenfoque */
+    -webkit-backdrop-filter: blur(15px);
+    border: 1px solid rgba(255, 255, 255, 0.1); /* Borde sutil */
+    /* --- FIN EFECTO GLASSMORPHISM --- */
     padding: 30px 20px;
     border-radius: 20px;
     text-align: center;
-    border: 1px solid #333;
     box-shadow: 0 15px 35px rgba(0,0,0,0.6);
     width: 100%;
     box-sizing: border-box;
@@ -59,8 +63,10 @@ input {
     padding: 14px;
     margin: 10px 0;
     border-radius: 10px;
-    border: 1px solid #444;
-    background: var(--input-bg);
+    /* --- GLASS EN INPUTS --- */
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    background: rgba(255, 255, 255, 0.08); 
+    /* ----------------------- */
     color: white;
     box-sizing: border-box;
     font-size: 16px;
@@ -108,7 +114,7 @@ button:hover {
     content: '';
     position: absolute;
     top: -50%;
-    left: -10%; /* Posición según tu imagen de referencia */
+    left: -10%; 
     width: 60%;
     height: 200%;
     background: linear-gradient(
@@ -124,15 +130,12 @@ button:hover {
     z-index: 1;
 }
 
-/* --- ELEMENTOS CON PROFUNDIDAD (Para que el reflejo pase detrás) --- */
-/* --- TIPOGRAFÍA Y TEXTOS IGUALES A LA IMAGEN --- */
-
 .card-number {
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; /* Tipografía moderna para el saldo */
-    font-size: 2.4rem; /* Tamaño prominente como en la foto */
-    color: #625f51; /* Dorado brillante */
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
+    font-size: 2.2rem;
+    color: #f1c40f; 
     letter-spacing: 1px;
-    font-weight: 700; /* Negrita marcada */
+    font-weight: 700;
     margin: 2px 0;
     position: relative;
     z-index: 2;
@@ -151,7 +154,7 @@ button:hover {
 }
 
 .card-holder { 
-    font-family: 'Courier New', Courier, monospace; /* Tipografía estilo tarjeta bancaria para el nombre */
+    font-family: 'Courier New', Courier, monospace; 
     font-size: 16px; 
     font-weight: 900; 
     color: white; 
@@ -169,14 +172,13 @@ button:hover {
     background: linear-gradient(135deg, #f1c40f 0%, #d4af37 50%, #b8860b 100%);
     border-radius: 6px;
     position: relative;
-    z-index: 2; /* Para que esté sobre el reflejo */
+    z-index: 2; 
     box-shadow: 
         inset 0 1px 2px rgba(255,255,255,0.3),
         0 4px 8px rgba(0,0,0,0.4);
     border: 1px solid #c99e2e;
 }
 
-/* Pseudo-elemento del chip para las líneas de circuito */
 .card-chip::before {
     content: '';
     position: absolute;
@@ -186,37 +188,7 @@ button:hover {
         linear-gradient(to bottom, transparent 48%, rgba(0,0,0,0.2) 50%, transparent 52%);
 }
 
-/* Estilo de Saldo igual a la imagen */
-.card-number {
-    font-family: 'Segoe UI', sans-serif; /* Más moderno que Courier */
-    font-size: 2.2rem;
-    color: #f1c40f; /* Dorado más vivo */
-    letter-spacing: 1px;
-    font-weight: 700;
-    margin: 2px 0;
-    position: relative;
-    z-index: 2; /* Para que esté sobre el reflejo */
-    text-shadow: 0 2px 10px rgba(0,0,0,0.5);
-}
-
-.card-label { 
-    font-size: 10px; 
-    color: #999; 
-    text-transform: uppercase; 
-    position: relative;
-    z-index: 2;
-}
-
-.card-holder { 
-    font-size: 15px; 
-    font-weight: bold; 
-    color: white; 
-    text-transform: uppercase;
-    position: relative;
-    z-index: 2;
-}
-
-/* --- BOTÓN ACTUALIZAR INTEGRADO (Dorado Circular) --- */
+/* 4. BOTÓN ACTUALIZAR INTEGRADO */
 .btn-refresh {
     background: transparent;
     border: 1px solid var(--primary);
@@ -231,7 +203,7 @@ button:hover {
     transition: 0.3s;
     font-size: 20px;
     position: relative;
-    z-index: 2; /* Para que esté sobre el reflejo */
+    z-index: 2;
 }
 
 .btn-refresh:hover {
@@ -357,4 +329,4 @@ button:hover {
 @keyframes fadeOut {
     from { opacity: 1; transform: translateY(0); }
     to { opacity: 0; transform: translateY(-20px); }
-}
+}   

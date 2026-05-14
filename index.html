@@ -24,10 +24,10 @@
                 </div>
             </div>
 
-            <h2 id="title-action">BIENVENIDO</h2>
-            <p id="desc-action" style="color:gray; font-size:14px; margin-bottom:15px;">Ingresa tu teléfono para ver tu saldo</p>
+            <h2 id="title-action" style="color: white; margin-bottom: 5px;">BIENVENIDO</h2>
+            <p id="desc-action" style="font-size:14px; margin-bottom:20px; color: rgba(255,255,255,0.6);">Ingresa tu teléfono para ver tu saldo</p>
             
-            <input type="number" id="inp-tel" placeholder="Número de teléfono">
+            <input type="number" id="inp-tel" inputmode="tel" placeholder="Número de teléfono">
             
             <div id="sec-name" class="hidden">
                 <input type="text" id="inp-name" placeholder="Tu Nombre Completo">
@@ -38,146 +38,43 @@
         </div>
 
         <div id="view-card" class="hidden" style="width: 100%;">
-    
-    <div class="view-card-bank">
-        <div style="display: flex; justify-content: space-between; align-items: flex-start;">
-            <div style="display: flex; align-items: center; gap: 10px;">
-                <div class="card-chip"></div>
-                <span style="font-size: 20px; color: rgba(212, 175, 55, 0.3); transform: rotate(90deg); display: inline-block; font-family: sans-serif; font-weight: bold;">(((</span>
-            </div>
-            <img src="img/LogoLueve.jpg" alt="Logo" style="width: 55px; height: 55px; border-radius: 50%; border: 2px solid white; background: white; object-fit: contain;">
-        </div>
+            <div class="view-card-bank">
+                <div style="display: flex; justify-content: space-between; align-items: flex-start;">
+                    <div style="display: flex; align-items: center; gap: 10px;">
+                        <div class="card-chip"></div>
+                        <span style="font-size: 20px; color: rgba(212, 175, 55, 0.3); transform: rotate(90deg); font-weight: bold;">(((</span>
+                    </div>
+                    <img src="img/LogoLueve.jpg" alt="Logo" style="width: 55px; height: 55px; border-radius: 50%; border: 2px solid white; background: white; object-fit: contain;">
+                </div>
 
-        <div style="margin-top: 5px;">
-            <div class="card-label">Saldo Disponible</div>
-            <div class="card-number" id="txt-pts">$0.00</div>
-        </div>
+                <div style="margin-top: 5px;">
+                    <div class="card-label">Saldo Disponible</div>
+                    <div class="card-number" id="txt-pts">$0.00</div>
+                </div>
 
-        <div style="display: flex; justify-content: space-between; align-items: flex-end;">
-            <div style="margin-bottom: 5px;">
-                <div class="card-label">Titular</div>
-                <div class="card-holder" id="txt-user-name">CLIENTE</div>
+                <div style="display: flex; justify-content: space-between; align-items: flex-end;">
+                    <div>
+                        <div class="card-label">Titular</div>
+                        <div class="card-holder" id="txt-user-name">CLIENTE</div>
+                    </div>
+                    <button class="btn-refresh" onclick="recargarSaldo()">
+                        <span>&#8635;</span>
+                    </button>
+                </div>
             </div>
-            <button class="btn-refresh" onclick="recargarSaldo()" title="Actualizar Saldo">
-                <span style="font-size: 22px; line-height: 1;">&#8635;</span>
-            </button>
+
+            <div class="box glass-qr">
+                <div class="qr-box">
+                    <img id="img-qr" src="" alt="QR" style="width:100%">
+                </div>
+                <p style="font-size: 12px; color: #888; margin-top: 15px; padding: 0 10px;">
+                    Muestra este código en caja para acumular puntos.
+                </p>
+                <button class="btn-link" onclick="location.reload()" style="color: #f1c40f; font-weight: bold; margin-top: 10px;">Cerrar sesión</button>
+            </div>
         </div>
     </div>
 
-    <div class="box" style="margin-top: -10px; padding-top: 40px; border-radius: 0 0 20px 20px;">
-        <div class="qr-box">
-            <img id="img-qr" src="" alt="QR" style="width:100%">
-        </div>
-        <p style="font-size: 13px; color: #888; margin-top: 15px; padding: 0 10px; font-family: 'Segoe UI', sans-serif;">
-            Muestra este código en caja para acumular cashback o pagar.
-        </p>
-        <button class="btn-link" onclick="location.reload()" style="color: var(--primary); margin-top: 10px; font-weight: bold; background: none; border: none; cursor: pointer;">
-            Cerrar sesión
-        </button>
-    </div>
-</div>
-    <script>
-        const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbyzKXsuEBRtdaqXz9rDWyxeZfzaV8L0uHDBbb0VH4C3Jyws0hcI7eVn-zcwFOwg3zrYLg/exec"; 
-        let esRegistro = false;
-
-        // --- SISTEMA DE NOTIFICACIONES ---
-        function mostrarNotificacion(mensaje, tipo = 'success') {
-            const container = document.getElementById('notification-container');
-            if(!container) return;
-            const toast = document.createElement('div');
-            toast.className = `toast ${tipo}`;
-            toast.innerHTML = `<span>${mensaje}</span>`;
-            
-            container.appendChild(toast);
-
-            setTimeout(() => {
-                toast.style.animation = "fadeOut 0.4s ease forwards";
-                setTimeout(() => toast.remove(), 400);
-            }, 3000);
-        }
-
-        function mostrarCargando(msj) {
-            document.getElementById('texto-carga').innerText = msj;
-            document.getElementById('overlay-carga').style.display = 'flex';
-        }
-
-        function ocultarCargando() {
-            document.getElementById('overlay-carga').style.display = 'none';
-        }
-
-        function modoRegistro() {
-            esRegistro = true;
-            document.getElementById('title-action').innerText = "REGISTRO";
-            document.getElementById('sec-name').classList.remove('hidden');
-            document.getElementById('btn-main').innerText = "REGISTRARME";
-            document.getElementById('btn-switch').classList.add('hidden');
-        }
-
-        async function procesarAcceso() {
-            const tel = document.getElementById('inp-tel').value;
-            const nom = document.getElementById('inp-name').value;
-
-            if (!tel) return mostrarNotificacion("Ingresa tu teléfono", "error");
-            if (esRegistro && !nom) return mostrarNotificacion("Ingresa tu nombre", "error");
-
-            mostrarCargando(esRegistro ? "CREANDO CUENTA..." : "CONSULTANDO...");
-
-            try {
-                const url = `${WEB_APP_URL}?telefono=${tel}&nombre=${encodeURIComponent(nom)}`;
-                const response = await fetch(url);
-                const res = await response.json();
-
-                if (res.status === "no_encontrado") {
-                    mostrarNotificacion("Número no registrado", "error");
-                } else {
-                    mostrarTarjeta(res.nombre, res.puntos, tel);
-                    mostrarNotificacion(`¡Bienvenido, ${res.nombre}!`);
-                }
-            } catch (err) {
-                mostrarNotificacion("Error de conexión", "error");
-            } finally {
-                ocultarCargando();
-            }
-        }
-
-        async function recargarSaldo() {
-            const tel = document.getElementById('inp-tel').value;
-            if(!tel) return;
-            
-            mostrarCargando("ACTUALIZANDO...");
-            try {
-                const url = `${WEB_APP_URL}?telefono=${tel}`;
-                const response = await fetch(url);
-                const res = await response.json();
-                
-                // Actualizar saldo en la tarjeta
-                const ptsElement = document.getElementById('txt-pts');
-                if(ptsElement) {
-                    ptsElement.innerText = "$" + parseFloat(res.puntos).toFixed(2);
-                }
-                mostrarNotificacion("Saldo actualizado correctamente");
-            } catch (e) {
-                mostrarNotificacion("Error al actualizar saldo", "error");
-            } finally {
-                setTimeout(ocultarCargando, 500);
-            }
-        }
-
-        function mostrarTarjeta(nombre, puntos, tel) {
-            document.getElementById('view-login').classList.add('hidden');
-            document.getElementById('view-card').classList.remove('hidden');
-            
-            // Actualizar Nombre en la tarjeta bancaria
-            const nameElement = document.getElementById('txt-user-name');
-            if(nameElement) nameElement.innerText = nombre.toUpperCase();
-            
-            // Actualizar Saldo
-            const ptsElement = document.getElementById('txt-pts');
-            if(ptsElement) ptsElement.innerText = "$" + parseFloat(puntos).toFixed(2);
-            
-            // Generar QR
-            document.getElementById('img-qr').src = `https://api.qrserver.com/v1/create-qr-code/?size=160x160&data=${tel}`;
-        }
-    </script>
+    <script src="script.js"></script>
 </body>
 </html>
